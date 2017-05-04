@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<body style="background: #f7f7f7">
+    <div align="center">
+        <img src="@Url.Content("~/images/logo.jpg")" />
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p align="center"><b>주소</b> 55101 전라북도 전주시 완산구 서학로 50(동서학동, 전주교육대학교) | <b>전화</b> 063-281-7114 | <b>팩스</b> 063-281-0102</p>
+            <p align="center">Copyright (c) 2012 Jeonju National University of Education. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

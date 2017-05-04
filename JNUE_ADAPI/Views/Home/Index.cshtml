@@ -1,0 +1,34 @@
+﻿@model JNUE_ADAPI.Models.StntNumbCheckViewModel
+@{
+    ViewBag.Title = "Office365 계정이 있는지 확인합니다.";
+}
+
+<h3 style="padding:50px 0px 20px 100px;"> @ViewBag.Title</h3>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    if (Html.Raw(TempData["false"]).ToString() == "1")
+    {
+        <script>
+            alert("가입이 완료되었습니다.\n클라우드 서버에 계정이 생성되기까지 30분정도 걸립니다. 계정이 생성되면 로그인화면으로 갈 수 있으니 잠시후 다시 시도하시기 바랍니다.");
+        </script>
+    }
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Stnt_Numb, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Stnt_Numb, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:160px">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="확인" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

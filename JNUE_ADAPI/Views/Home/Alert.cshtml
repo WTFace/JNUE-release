@@ -1,0 +1,6 @@
+﻿@*@Html.Raw(TempData["id"])*@
+<script>
+    alert(" 이미 가입되어있어 로그인페이지로 넘어갑니다.\n @Html.Raw(TempData["status"])"); 
+    window.location = "https://mso365adfs.jnue.ac.kr/adfs/ls/?lc=1033&client-request-id=13bdc15f-c955-47bb-9ec5-811ccd466607&username=@Html.Raw(TempData["upn"])&wa=wsignin1.0&wtrealm=urn%3afederation%3aMicrosoftOnline&wctx=estsredirect%3d2%26estsrequest%3drQIIAeNisFLOKCkpKLbS1y_ILypJzNHLT0vLTE7VS87P1csvSs9MAbGKhLgE4g_uFQ49udt93tFGmbNuaeyrGNVw6tTPScxLycxL10ssLqi4wMjYxcRiaGBsvImJ1dfZ18nzBNOEs3K3mAT9i9I9U8KL3VJTUosSSzLz8x4x8YYWpxb55-VUhuRnp-btYlYxMzc1SU5MTdE1NUlM1TVJTLLUtTA3NtVNMbAwSkpMTE01MTE_wLIh5AKLwCsWHgNmKw4OLgEGCQYFhh8sjItYgQ7PaNdf0rJRwbW51-5_zA-xx6dY9asqvY1dXbIKzDxT3NPDQyJLDEOygstKfNPSSi3TCrTDM4y03fzSigxDwgxszawMJ7AJTWBj2sVpS5yH7UsSi9JTS2xVjdJSUtMSS3NKwMIA0&popupui=";
+
+</script>

@@ -34,7 +34,7 @@ namespace JNUE_ADAPI.AD
                 using (var response = client.GetAsync(request))
                 {
                     response.Wait();
-                    res = response.Result.IsSuccessStatusCode.ToString();
+                    res = response.Result. IsSuccessStatusCode.ToString();
                 };
             };
             return res;

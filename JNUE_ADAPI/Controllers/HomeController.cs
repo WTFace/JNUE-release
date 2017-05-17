@@ -1,6 +1,5 @@
 ﻿using JNUE_ADAPI.Models;
 using System.Web.Mvc;
-using System.Linq;
 using System;
 using JNUE_ADAPI.AD;
 using log4net;
@@ -16,13 +15,11 @@ namespace JNUE_ADAPI.Controllers
         readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         #endregion
         
-        [HttpGet]
-        public ActionResult Index()
-        {
-            AzureAD.getToken();
-            return View(); }
+        //[HttpGet]
+        //public ActionResult Index()
+        //{
+        //    return View(); }
 
-        [AcceptVerbs(HttpVerbs.Post | HttpVerbs.Patch)]
         public ActionResult Index(StntNumbCheckViewModel model)
         {
             if (ModelState.IsValid)
@@ -34,7 +31,7 @@ namespace JNUE_ADAPI.Controllers
                     try
                     {
                         conn.Open();
-                        string sql = "select user_used,role,status,stnt_knam from office365 where stnt_numb= '" + model.Stnt_Numb.ToString() + "'";
+                        string sql = "select user_used,role,status,stnt_knam from office365 where stnt_numb= '" + model.Stnt_Numb + "'";
                         OracleCommand cmd = new OracleCommand(sql, conn);
                         cmd.CommandType = System.Data.CommandType.Text;
                         OracleDataReader dr = cmd.ExecuteReader();
@@ -53,9 +50,9 @@ namespace JNUE_ADAPI.Controllers
                         if (haksa["user_used"] == "N") // 비활성화된 계정
                         { ModelState.AddModelError("", "입력하신 학번은 현재 사용중이지 않습니다.\n관리자에게 문의하여 주시기 바랍니다."); }
 
-                        if (LocalAD.ExistAttributeValue("extensionAttribute1", model.Stnt_Numb.ToString()) == true)
+                        if (LocalAD.ExistAttributeValue("extensionAttribute1", model.Stnt_Numb) == true)
                         {
-                            string upn = LocalAD.getSingleAttr("userPrincipalName", model.Stnt_Numb.ToString());
+                            string upn = LocalAD.getSingleAttr("userPrincipalName", model.Stnt_Numb);
                             TempData["upn"] = upn; //login시 id 넘겨줄 용도
 
                             if (AzureAD.getUser(upn).Result.Equals("False")) //클라우드 동기화 끝났는지
@@ -64,10 +61,10 @@ namespace JNUE_ADAPI.Controllers
                                 return RedirectToAction("Index", "Home");
                             }
                             
-                            if (haksa["status"] != LocalAD.getSingleAttr("description", model.Stnt_Numb.ToString())) //학적변동
+                            if (haksa["status"] != LocalAD.getSingleAttr("description", model.Stnt_Numb)) //학적변동확인
                             {
-                                AzureAD.setUsageLocation(upn);
-                                LocalAD.UpdateStatus(model.Stnt_Numb.ToString(), haksa["status"]);
+                                AzureAD.setUsageLocation(upn); //위치 할당
+                                LocalAD.UpdateStatus(model.Stnt_Numb, haksa["status"]);
                                 if (haksa["status"] == "2"){
                                     TempData["status"] = "학적 상태가 '휴학'으로 변경되었습니다.";
                                 }else if (haksa["status"] == "1"){
@@ -75,7 +72,7 @@ namespace JNUE_ADAPI.Controllers
                                 }else{
                                     TempData["status"] = "상태가 '졸업/퇴직'으로 변경되었습니다.";}
 
-                                if (LocalAD.getSingleAttr("employeeType", model.Stnt_Numb.ToString()) == "student")
+                                if (LocalAD.getSingleAttr("employeeType", model.Stnt_Numb) == "student")
                                 {
                                     if (haksa["status"] == "1")
                                     { //재학
@@ -87,7 +84,7 @@ namespace JNUE_ADAPI.Controllers
                                         AzureAD.removeLicense(upn, Properties.PlusLicense);
                                     }
                                 }
-                                else if (LocalAD.getSingleAttr("employeeType", model.Stnt_Numb.ToString()) == "faculty")
+                                else if (LocalAD.getSingleAttr("employeeType", model.Stnt_Numb) == "faculty")
                                 {
                                     if (haksa["status"] == "0") //퇴직0
                                     { 
@@ -105,7 +102,7 @@ namespace JNUE_ADAPI.Controllers
                         else
                         {
                             TempData["numb"] = model.Stnt_Numb;
-                            // 없으면 회원가입페이지로 리디렉션
+                            // 없으면 회원가입페이지로
                             return RedirectToAction("RegisterJnueO365", "Home");
                         }
                     }
@@ -119,8 +116,7 @@ namespace JNUE_ADAPI.Controllers
             return View(model);
         }
         
-
-        // GET: Home
+        
         public ActionResult RegisterJnueO365()
         {
             return View();
@@ -139,9 +135,11 @@ namespace JNUE_ADAPI.Controllers
             {
                 string cua = LocalAD.CreateUserAccount(model.ID, model.Password, numb.ToString());
                 
-                if (cua != "NONE")
+                ///정상적으로 생성이 되더라도 어차피 동기화시간때문에 로그인 못하니,
+                ///Index로 보내고 "false"=1일때 뜨는 팝업을 보게한다.
+                if (cua != "NONE") 
                 {
-                    TempData["false"] = "1";
+                    TempData["false"] = "1";  
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "사용자를 추가할 수 없습니다.\n관리자에게 문의하여 주시기 바랍니다.");

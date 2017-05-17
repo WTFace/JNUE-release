@@ -58,7 +58,7 @@
                     ds.Filter = "(&(objectCategory=person)(extensionAttribute1=*))"; //O365users only
                     ds.PropertiesToLoad.Add(attributeName);
                     SearchResultCollection allResult = ds.FindAll();
-
+                    
                     if (allResult != null)
                     {
                         foreach (SearchResult result in allResult)

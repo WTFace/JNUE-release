@@ -5,7 +5,7 @@
 
 <h3 style="padding:50px 0px 20px 100px;"> @ViewBag.Title</h3>
 
-@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Index", "Home", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
 {
     if (Html.Raw(TempData["false"]).ToString() == "1")
     {

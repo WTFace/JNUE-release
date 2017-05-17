@@ -7,7 +7,7 @@ namespace JNUE_ADAPI.Models
     {
         [Required]
         [Display(Name = "학번 / 교번")]
-        public int Stnt_Numb { get; set; }       
+        public string Stnt_Numb { get; set; }       
     }
 
     public class RegisterViewModel
